@@ -1,11 +1,5 @@
 # Express Mongobd Tutorial
 
-1. [React Inastallation](https://github.com/dev-nazmulislam/react-short-note/tree/installation)
-2. [React Fundamental Concepts](https://github.com/dev-nazmulislam/react-short-note/tree/react-fundamental)
-3. [React Advanced concepts](https://github.com/dev-nazmulislam/react-short-note/tree/advanced)
-
-# Advanced
-
 ### Basic Connact root file like `index.jx`
 
 ```Js
@@ -61,30 +55,100 @@ app.listen(port, () => {
 
 ### Get API
 
-`Get/Access all data from mongodb database`
+## Get/Access all data from mongodb database
 
-<table>
-<tr>
-<td>Server Site Code</td>
-<td>Client site code</td>
-</tr>
-  <tr>
-    <td>
+`Server Site Code`
+
 ```Js
 app.get("/service", async (req, res) => {
       const result = await testCollection.find().toArray();
       res.send(users);
     });
 ```
-  </td>
-    <td>
-    ```Js
-     useEffect(() => {
+
+`Client site code`
+
+```Js
+useEffect(() => {
       fetch("http://localhost:5000/service")
         .then((res) => res.json())
         .then((data) => console.log(data));
     }, []);
-    ```
-    </td>
-  </tr>
-</table>
+```
+
+## Get/Access Spacific data from mongodb database with id/email
+
+`Server Site Code`
+
+```Js
+app.get("/service/:id", async (req, res) => {
+const id = req.params.id;
+const result = await testCollection.find({ \_id: ObjectId(id) }).toArray();
+res.send(result);
+});
+```
+
+`Client site code`
+
+```Js
+useEffect(() => {
+fetch(`http://localhost:5000/service/${id}`)
+.then((res) => res.json())
+.then((data) => console.log(data));
+}, []);
+
+```
+
+## Get/Access Spacific data from mongodb database with multiple query
+
+`Server Site Code`
+
+```Js
+app.get("/service", async (req, res) => {
+const query = req.body;
+const result = await testCollection.find(query).toArray();
+res.send(result);
+});
+```
+
+`Client site code`
+
+```Js
+    const query = {
+      email: "exampale@example.com",
+      name: "set name",
+      time: "set time",
+    };
+    useEffect(() => {
+      fetch("http://localhost:5000/service", {
+        method: "GET",
+        body: JSON.stringify(query), // send any of query by which you find data
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }, []);
+```
+
+## Get/Access Limited data from mongodb database after find with query
+
+`Server Site Code`
+
+```Js
+    app.get("/service", async (req, res) => {
+      const query = {};
+      const findData = testCollection.find(query);
+      const result = await findData.skip(5).limit(3).toArray(); //you can also set skip & limit range dynamicly.
+      res.send(result);
+    });
+```
+
+`Client site code`
+
+```Js
+ useEffect(() => {
+      fetch("http://localhost:5000/service")
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }, []);
+
+```
