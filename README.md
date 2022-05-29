@@ -24,7 +24,7 @@
 
 [Got to top](#let-start-express)
 
-**_Embedded on `index.jx` to Connect._**
+**Embedded on `index.jx` to Connect.**
 
 ```Js
 const express = require("express");
@@ -109,7 +109,7 @@ useEffect(() => {
 ```Js
 app.get("/service/:id", async (req, res) => {
 const id = req.params.id;
-const result = await testCollection.find({ \_id: ObjectId(id) }).toArray();
+const result = await testCollection.find({ _id: ObjectId(id) }).toArray();
 res.send(result);
 });
 ```
@@ -163,7 +163,7 @@ res.send(result);
     app.get("/service", async (req, res) => {
       const query = {};
       const findData = testCollection.find(query);
-      const result = await findData.skip(5).limit(3).toArray(); //you can also set skip & limit range dynamicly.
+      const result = await findData.skip(5).limit(3).toArray(); // you can also set skip & limit range dynamicly.
       res.send(result);
     });
 ```
@@ -360,7 +360,7 @@ const updatedData = {
 ```Js
 app.delete("/service/:id", async (req, res) => {
 const id = req.params.id;
-const result = await testCollection.deleteOne({ \_id: ObjectId(id) });
+const result = await testCollection.deleteOne({ _id: ObjectId(id) });
 res.send(result);
 });
 ```
