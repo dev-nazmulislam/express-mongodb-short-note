@@ -1,4 +1,4 @@
-# Express with Mongobd Tutorial (Basic)
+# Express with MongoDB Tutorial (Basic)
 
 ## React Tutorial
 
