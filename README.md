@@ -1,6 +1,23 @@
-# Express Mongobd Tutorial
+# Express with Mongobd Tutorial (Basic)
 
-### Basic Connact root file like `index.jx`
+## React Tutorial
+
+1. [React Inastallation](https://github.com/dev-nazmulislam/react-short-note/tree/installation)
+2. [React Fundamental Concepts](https://github.com/dev-nazmulislam/react-short-note/tree/react-fundamental)
+3. [React Advanced concepts](https://github.com/dev-nazmulislam/react-short-note/tree/advanced)
+
+## let start Express
+
+[Starter template](#basic-setup)
+[app.get()](#get-methood)
+[app.post()](#post-methood)
+[app.put()](#put-methood)
+[app.patch()](#patch-methood)
+[app.delete()](#delete-methood)
+
+### Basic Setup
+
+**_Embedded on `index.jx` to Connect._**
 
 ```Js
 const express = require("express");
@@ -53,7 +70,7 @@ app.listen(port, () => {
 
 ```
 
-### Get API
+### Get Methood
 
 ## Get/Access all data from mongodb database
 
@@ -151,4 +168,192 @@ res.send(result);
         .then((data) => console.log(data));
     }, []);
 
+```
+
+## Post Methood
+
+### Post data without cheack on mongodb database
+
+`Server Site Code`
+
+```Js
+app.post("/service", async (req, res) => {
+const service = req.body;
+const result = await testCollection.insertOne(service);
+res.send(result);
+});
+```
+
+`Client site code`
+
+```Js
+    const newData = {
+      // stroe new Data in Object here
+      name: "",
+      price: "",
+    };
+    fetch("http://localhost:5000/service", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const allData = [...previusData, newData];
+        console.log(newReview);
+      });
+```
+
+### Post data With cheack in mongodb database. Batter to use Put Methood for this task
+
+`Server Site Code`
+
+```Js
+    app.post("/service/:email", async (req, res) => {
+      const service = req.body.service;
+      const query = req.body.newQuery;
+      query.email = email;
+      const exist = testCollection.findOne(query);
+      if (exist) {
+        res.send({ result: "success" });
+      } else {
+        const result = await testCollection.insertOne(service);
+        res.send(result);
+      }
+    });
+```
+
+`Client Site Code`
+
+```Js
+    const service = {
+      name: "",
+      price: "",
+    };
+    const newQuery = {
+      name: "",
+      time: "",
+    };
+    fetch("http://localhost:5000/service", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ service, newQuery }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const allData = [...previusData, newData];
+        console.log(newReview);
+      });
+```
+
+## Put Methood
+
+### Update & insert Data on database by id/email/otherQuery
+
+`Server site Code`
+
+```Js
+    app.put("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const service = req.body;
+
+      const result = await testCollection.updateOne(
+        { _id: ObjectId(id) }, // Find Data by query many time query type is "_id: id" Cheack on database
+        {
+          $set: service, // Set updated Data
+        },
+        { upsert: true } // define work
+      );
+      res.send({ result });
+    });
+```
+
+`Client Site Code`
+
+```Js
+const updatedData = {
+name: "",
+role: "",
+};
+
+    fetch(`http://localhost:5000/service/${id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert("item Updated successfully!!!");
+      });
+```
+
+## Patch Methood
+
+### update Data by id/email/othersQueary
+
+`Server site code`
+
+```Js
+app.patch("/service/:id", async (req, res) => {
+const id = req.params.id;
+const service = req.body;
+const result = await testCollection.updateOne(
+{ _id: id }, // sometime _id:ObjectId(id)
+{
+$set: service,
+}
+);
+res.send(result);
+});
+```
+
+`Client site code`
+
+```Js
+const updatedData = {
+      name: "",
+      role: "",
+    };
+
+    fetch(`http://localhost:5000/service/${id}`, {
+      method: "patch",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert("item Updated successfully!!!");
+      });
+```
+
+## Delete Methood
+
+### Delete Data form mongodb Database by id
+
+`Server site code`
+
+```Js
+app.delete("/service/:id", async (req, res) => {
+const id = req.params.id;
+const result = await testCollection.deleteOne({ \_id: ObjectId(id) });
+res.send(result);
+});
+```
+
+`Client Site Code`
+
+```Js
+    fetch(`http://localhost:5000/service/${_id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {});
 ```

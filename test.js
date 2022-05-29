@@ -94,6 +94,156 @@ async function run() {
         .then((res) => res.json())
         .then((data) => console.log(data));
     }, []);
+
+    // Post API
+    // Post data without cheack on mongodb database
+    // Server Site Code
+    app.post("/service", async (req, res) => {
+      const service = req.body;
+      const result = await testCollection.insertOne(service);
+      res.send(result);
+    });
+
+    // Client site code
+    const newData = {
+      // stroe new Data in Object here
+      name: "",
+      price: "",
+    };
+    fetch("http://localhost:5000/service", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const allData = [...previusData, newData];
+        console.log(newReview);
+      });
+
+    // Post data With cheack in mongodb database. Batter to use Put Methood for this task
+    // Server Site Code
+    app.post("/service/:email", async (req, res) => {
+      const service = req.body.service;
+      const query = req.body.newQuery;
+      query.email = email;
+      const exist = testCollection.findOne(query);
+      if (exist) {
+        res.send({ result: "success" });
+      } else {
+        const result = await testCollection.insertOne(service);
+        res.send(result);
+      }
+    });
+
+    // Client Site Code
+    const service = {
+      name: "",
+      price: "",
+    };
+    const newQuery = {
+      name: "",
+      time: "",
+    };
+    fetch("http://localhost:5000/service", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ service, newQuery }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const allData = [...previusData, newData];
+        console.log(newReview);
+      });
+
+    // Put Methood
+    // Update & insert Data on database by id/email/otherQuery
+    // Server site Code
+    app.put("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const service = req.body;
+
+      const result = await testCollection.updateOne(
+        { _id: ObjectId(id) }, // Find Data by query many time query type is "_id: id" Cheack on database
+        {
+          $set: service, // Set updated Data
+        },
+        { upsert: true } // define work
+      );
+      res.send({ result });
+    });
+
+    // Client Site Code
+    const updatedData = {
+      name: "",
+      role: "",
+    };
+
+    fetch(`http://localhost:5000/service/${id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert("item Updated successfully!!!");
+      });
+
+    // Patch api
+    // update Data by id/email/othersQueary
+    // Server site code
+    app.patch("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const service = req.body;
+      const result = await testCollection.updateOne(
+        { _id: id }, // sometime _id:ObjectId(id)
+        {
+          $set: service,
+        }
+      );
+      res.send(result);
+    });
+
+    // Client site code
+
+    // const updatedData = {
+    //   name: "",
+    //   role: "",
+    // };
+
+    // fetch(`http://localhost:5000/service/${id}`, {
+    //   method: "patch",
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    //   body: JSON.stringify(updatedData),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     alert("item Updated successfully!!!");
+    //   });
+
+    // Delete API
+    // Delete Data form mongodb Database by id
+    // Server site code
+    app.delete("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await testCollection.deleteOne({ _id: ObjectId(id) });
+      res.send(result);
+    });
+
+    // Client Site Code
+    fetch(`http://localhost:5000/service/${_id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {});
   } finally {
     // await client.close();
   }
