@@ -6,7 +6,7 @@
 
 # Advanced
 
-### Basic Connact
+### Basic Connact root file like `index.jx`
 
 ```Js
 const express = require("express");
@@ -58,3 +58,33 @@ app.listen(port, () => {
 });
 
 ```
+
+### Get API
+
+`Get/Access all data from mongodb database`
+
+<table>
+<tr>
+<td>Server Site Code</td>
+<td>Client site code</td>
+</tr>
+  <tr>
+    <td>
+```Js
+app.get("/service", async (req, res) => {
+      const result = await testCollection.find().toArray();
+      res.send(users);
+    });
+```
+  </td>
+    <td>
+    ```Js
+     useEffect(() => {
+      fetch("http://localhost:5000/service")
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }, []);
+    ```
+    </td>
+  </tr>
+</table>
