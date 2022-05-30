@@ -88,7 +88,7 @@ app.listen(port, () => {
 ```Js
 app.get("/service", async (req, res) => {
       const result = await testCollection.find().toArray();
-      res.send(users);
+      res.send(result);
     });
 ```
 
